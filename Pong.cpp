@@ -4,6 +4,8 @@
 static const int WIDTH = 1280;
 static const int HEIGHT = 720;
 
+void drawBoard(SDL_Renderer *render);
+
 int main(int argc, char const *argv[])
 {
     SDL_Window *win = NULL;
@@ -28,9 +30,7 @@ int main(int argc, char const *argv[])
         std::cerr << "Error creating renderer: " << SDL_GetError() << std::endl;
     }
     
-    SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(render);
-    SDL_RenderPresent(render);
+    drawBoard(render);
 
     //core game loop begins     
     while(isRunning) {
@@ -41,6 +41,9 @@ int main(int argc, char const *argv[])
             if(event.type == SDL_KEYDOWN) {
                 isRunning = false;
             }
+            if(event.type == SDL_MOUSEBUTTONUP) {
+                isRunning = false;
+            }
         }
     }
 
@@ -49,4 +52,27 @@ int main(int argc, char const *argv[])
     SDL_Quit();
 
     return 0;
+}
+
+void drawBoard(SDL_Renderer *render) {
+    //renders background color
+    SDL_RenderClear(render);
+    SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
+
+    //renders "net"
+    SDL_SetRenderDrawColor(render, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
+    SDL_RenderDrawLine(render, 0, 70, WIDTH, 70);
+
+    for (int y = 70; y < HEIGHT; y++) { //leave 70px gap to keep score and time 
+        if (y % 5) {
+            SDL_RenderDrawPoint(render, WIDTH / 2, y);
+        }
+    }
+
+    //renders
+
+    SDL_RenderPresent(render);
+
+
 }
